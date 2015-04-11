@@ -1,0 +1,20 @@
+biketheft<-read.csv('/Users/robertwachs/Desktop/Bike Theft Log (From Sept07).csv')
+dorms<-c("Swig","Graham","Dunne","Sobrato","Mclaughlin","Walsh","Bellarmine","Casa","filippo","Nobili","Villas")
+for (i in 1:11) {
+  print(dorms[i])
+  print(length(grep(dorms[i],biketheft$LOCATION)))
+}
+
+
+  x<-mdy(biketheft$DATE)
+  wday(x,label=TRUE)
+
+for(i in 1:7){
+  print(wday(i,label=TRUE))
+  print(length(grep(i,wday(x))))
+}
+
+for(i in 1:12){
+  print(month(i,label=TRUE))
+  print(length(grep(i,month(x))))
+}

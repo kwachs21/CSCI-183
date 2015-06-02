@@ -1,0 +1,22 @@
+soil<-read.csv("/Users/robertwachs/Desktop/soil.csv")
+soilm<-data.matrix(soil)
+soilm2<-subset(soilm,select=-pH)
+soilg<-glmnet(soilm2,soil$pH,family="gaussian")
+plot(soilg)
+soilcv<-cv.glmnet(soilm2,soil$pH)
+lmin<-soilcv$lambda.min
+#> lmin
+#[1] 0.003426429
+cf<-as.matrix(coef(soilcv,soilcv$lambda.min))
+plot(cf)
+head(cf[order(abs(cf), decreasing=TRUE),,drop=FALSE],10)
+# m2470.39 -4.114614
+# m2184.98  3.039539
+# m2181.12  1.986538
+# m1330.66 -1.830844
+# m2472.32 -1.801037
+# m2468.47 -1.699622
+# m2190.76  1.651955
+# m2466.54 -1.557278
+# m1052.95  1.310027
+# m1656.57  1.232407

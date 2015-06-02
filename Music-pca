@@ -1,0 +1,11 @@
+music<-read.csv("/Users/robertwachs/Desktop/music-all (1).csv")
+music[is.na(music)]<-0
+musicx<-subset(music,select=lvar:rfener)
+pc<-prcomp(musicx,retx=TRUE,scale=TRUE)
+pcs<-as.data.frame(pc$x)
+pcs1<-as.data.frame(pc$x)$PC1
+pcs2<-as.data.frame(pc$x)$PC2
+pcs<-data.frame(pcs1,pcs2)
+sds<-as.data.frame(pc$sdev)
+qplot(pc$sdev,geom="density")
+ggplot(pcs,aes(x=pcs1,y=pcs2,label=music$artist))+geom_point()+geom_text()

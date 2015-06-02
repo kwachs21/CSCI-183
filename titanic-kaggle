@@ -1,0 +1,15 @@
+t3 <- read.csv('~/Desktop/titanic3.csv')
+t4 <- na.omit(t3[,c(1,2,4,5)])
+model = glm(t4$survived ~ t4$pclass + t4$sex + t4$age, family='binomial')
+t4$prob <- predict(model, t4, type='response')
+
+library(ggplot2)
+p <- ggplot(data = t4, aes(x = age, y = prob, color=sex, point=pclass)) +
+  geom_point(aes(size=as.factor(t4$pclass))) + ylab('Probability of Survival') + xlab('Age')
+p
+
+
+t4$correct <- as.numeric((round(t4$prob) == 1 & t4$survived ==1 | round(t4$prob) == 0 & t4$survived == 0) )
+sum(as.numeric(t4$correct)) / length(t4$correct)
+
+#[1] 0.7877629

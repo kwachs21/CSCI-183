@@ -1,0 +1,158 @@
+CAschools<-read.csv("/Users/robertwachs/Desktop/5-29-2015---269/Data_5-29-2015---269.csv")
+plot(CAschools$BAGR100..GR200_13.,CAschools$CINSON..DRVIC2013.,xlab="Rate of Graduation within 4 years",ylab="In-state Tuition",main="The Cost of Four Years")
+abline(lm(CAschools$CINSON..DRVIC2013.~CAschools$BAGR100..GR200_13.), col="red")
+lines(lowess(CAschools$BAGR100..GR200_13.,CAschools$CINSON..DRVIC2013.), col="blue")
+names<-subset(CAschools,select=instnm)
+text(CAschools$BAGR100..GR200_13.,CAschools$CINSON..DRVIC2013.,row.names(names)<-names$instnm, cex=0.6, pos=3, col="red")
+
+
+#### Cluster Analysis ######
+
+
+data<-subset(CAschools,select=c(BAGR100..GR200_13.,CINSON..DRVIC2013.))
+
+wss <- (nrow(data)-1)*sum(apply(data,2,var))
+for (i in 2:17) wss[i] <- sum(kmeans(data, centers=i)$withinss)
+plot(1:17, wss, type="b", xlab="Number of Clusters",
+     ylab="Within groups sum of squares")
+
+#cluster groupings
+fit <- kmeans(data, 3)
+aggregate(data,by=list(fit$cluster),FUN=mean)
+mydata <- data.frame(data, fit$cluster)
+
+#private vs public#
+plot(CAschools$CONTROL..HD2013.,CAschools$BAGR100..GR200_13.,xlab="Public vs private",ylab="Rate of Graduation within 4 years")
+lines(lowess(CAschools$CONTROL..HD2013.,CAschools$BAGR100..GR200_13.), col="blue")
+plot(CAschools$BAGR100..GR200_13.,CAschools$CONTROL..HD2013.)
+#qplot(CAschools$BAGR100..GR200_13.,geom="density")
+#ggplot(CAschools,aes(x=CAschools$BAGR100..GR200_13.,y=CAschools$CINSON..DRVIC2013.,label=CAschools$instnm))
+
+
+######## tuition over time ######
+
+RatesTuition<-read.csv("/Users/robertwachs/Desktop/Data_5-30-2015.csv")
+tuition<-subset(RatesTuition,select=c(CINSON..HD2002.:CINSON..DRVIC2012_RV.,CINSON..DRVIC2013.))
+
+
+tuition<-na.omit(tuition)
+###rename columns#########
+names(tuition)[1]<-paste("2002")
+names(tuition)[2]<-paste("2003")
+names(tuition)[3]<-paste("2004")
+names(tuition)[4]<-paste("2005")
+names(tuition)[5]<-paste("2006")
+names(tuition)[6]<-paste("2007")
+names(tuition)[7]<-paste("2008")
+names(tuition)[8]<-paste("2009")
+names(tuition)[9]<-paste("2010")
+names(tuition)[10]<-paste("2011")
+names(tuition)[11]<-paste("2012")
+names(tuition)[12]<-paste("2013")
+
+plot(colnames(tuition),tuition[1,],xlab="Year",ylab="In-State Tuition",main="CSU-Chico")
+
+slope=lm(tuition[1,]~colnames(tuition))
+
+###tution over time####
+
+plot(colnames(tuition),tuition[7,],type="l",xlab="Year",ylab="In-State Tuition",ylim=c(0, 70000),main="Tuition over time")
+
+lines(colnames(tuition),tuition[1,], col="blue")
+lines(colnames(tuition),tuition[2,], col="blue")
+lines(colnames(tuition),tuition[3,], col="blue")
+lines(colnames(tuition),tuition[4,], col="blue")
+lines(colnames(tuition),tuition[5,], col="blue")
+lines(colnames(tuition),tuition[6,], col="blue")
+lines(colnames(tuition),tuition[8,], col="blue")
+
+
+lines(colnames(tuition),tuition[10,], col="orange")
+lines(colnames(tuition),tuition[11,], col="orange")
+lines(colnames(tuition),tuition[12,], col="orange")
+lines(colnames(tuition),tuition[14,], col="orange")
+
+
+lines(colnames(tuition),tuition[9,], col="black")
+lines(colnames(tuition),tuition[17,], col="black")
+lines(colnames(tuition),tuition[16,], col="black")
+lines(colnames(tuition),tuition[15,], col="black")
+
+
+#### out of state tuition####
+otuition<-read.csv("/Users/robertwachs/Desktop/Data_6-5-2015.csv")
+
+names(otuition)[14]<-paste("2001")
+names(otuition)[13]<-paste("2002")
+names(otuition)[12]<-paste("2003")
+names(otuition)[11]<-paste("2004")
+names(otuition)[10]<-paste("2005")
+names(otuition)[9]<-paste("2006")
+names(otuition)[8]<-paste("2007")
+names(otuition)[7]<-paste("2008")
+names(otuition)[6]<-paste("2009")
+names(otuition)[5]<-paste("2010")
+names(otuition)[4]<-paste("2011")
+names(otuition)[3]<-paste("2012")
+names(otuition)[2]<-paste("2013")
+
+ootuition<-subset(otuition,select=c("2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013"))
+plot(colnames(ootuition),ootuition[7,],type="l",xlab="Year",ylab="Out-of-State Tuition",ylim=c(0, 60000),main="Out-of-State Tuition over time")
+
+lines(colnames(ootuition),ootuition[2,], col="blue")
+lines(colnames(ootuition),ootuition[3,], col="blue")
+lines(colnames(ootuition),ootuition[4,], col="blue")
+lines(colnames(ootuition),ootuition[5,], col="blue")
+lines(colnames(ootuition),ootuition[6,], col="blue")
+lines(colnames(ootuition),ootuition[8,], col="blue")
+
+
+lines(colnames(ootuition),ootuition[10,], col="orange")
+lines(colnames(ootuition),ootuition[11,], col="orange")
+lines(colnames(ootuition),ootuition[12,], col="orange")
+lines(colnames(ootuition),ootuition[14,], col="orange")
+
+
+lines(colnames(ootuition),ootuition[9,], col="black")
+lines(colnames(ootuition),ootuition[17,], col="black")
+lines(colnames(ootuition),ootuition[16,], col="black")
+lines(colnames(ootuition),ootuition[15,], col="black")
+
+###in-state tuition###
+ituition<-read.csv("/Users/robertwachs/Desktop/Data_6-5-2015 (1).csv")
+
+names(ituition)[14]<-paste("2001")
+names(ituition)[13]<-paste("2002")
+names(ituition)[12]<-paste("2003")
+names(ituition)[11]<-paste("2004")
+names(ituition)[10]<-paste("2005")
+names(ituition)[9]<-paste("2006")
+names(ituition)[8]<-paste("2007")
+names(ituition)[7]<-paste("2008")
+names(ituition)[6]<-paste("2009")
+names(ituition)[5]<-paste("2010")
+names(ituition)[4]<-paste("2011")
+names(ituition)[3]<-paste("2012")
+names(ituition)[2]<-paste("2013")
+
+iituition<-subset(ituition,select=c("2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013"))
+plot(colnames(iituition),iituition[7,],type="l",xlab="Year",ylab="In-State Tuition",ylim=c(0, 60000),main="In-State Tuition over time")
+
+lines(colnames(iituition),iituition[2,], col="blue")
+lines(colnames(iituition),iituition[3,], col="blue")
+lines(colnames(iituition),iituition[4,], col="blue")
+lines(colnames(iituition),iituition[5,], col="blue")
+lines(colnames(iituition),iituition[6,], col="blue")
+lines(colnames(iituition),iituition[8,], col="blue")
+
+
+lines(colnames(iituition),iituition[10,], col="orange")
+lines(colnames(iituition),iituition[11,], col="orange")
+lines(colnames(iituition),iituition[12,], col="orange")
+lines(colnames(iituition),iituition[14,], col="orange")
+
+
+lines(colnames(iituition),iituition[9,], col="black")
+lines(colnames(iituition),iituition[17,], col="black")
+lines(colnames(iituition),iituition[16,], col="black")
+lines(colnames(iituition),ootuition[15,], col="black")

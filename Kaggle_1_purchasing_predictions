@@ -1,0 +1,4 @@
+train<-read.csv('/Users/robertwachs/Desktop/train.csv')
+test<-read.csv('/Users/robertwachs/Desktop/test.csv')
+train1<-subset(train,train$srch_id==1)
+tree<-randomForest()
